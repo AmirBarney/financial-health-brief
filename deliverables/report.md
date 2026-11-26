@@ -37,6 +37,18 @@ Latest revenue snapshot date: **2026-08-11**
 | past_due_accounts | 7 | not supplied |
 | payment_plan_balance | 1950 | USD |
 
+### Revenue variance comparison
+
+Comparison rule: latest available snapshot (2026-08-11) minus the immediately prior available snapshot (2026-08-10).
+
+| Metric | Prior snapshot | Latest snapshot | Change | Currency |
+|---|---:|---:|---:|---|
+| collected_revenue | +24600.00 | +25100.00 | **+500.00** | USD |
+| enrolled_students | +83.00 | +84.00 | **+1.00** | not supplied |
+| outstanding_balance | +4700.00 | +4300.00 | **-400.00** | USD |
+| past_due_accounts | +8.00 | +7.00 | **-1.00** | not supplied |
+| payment_plan_balance | +2100.00 | +1950.00 | **-150.00** | USD |
+
 ## Review items
 
 - Pending and disputed items require human review; the Operations owner approves dispute treatments, spending changes, and escalations.
@@ -54,7 +66,7 @@ Latest revenue snapshot date: **2026-08-11**
 - Source URL: https://docs.google.com/spreadsheets/d/16HhjfR9uG1oUwSFNjQvAvU9Q9gVjzxL0ufBzTJe82v8
 - Fetch URL: https://docs.google.com/spreadsheets/d/16HhjfR9uG1oUwSFNjQvAvU9Q9gVjzxL0ufBzTJe82v8/export?format=csv
 - Sheet/tab identity: gid=default
-- Fetch timestamp: 2026-11-26T15:47:54+00:00
+- Fetch timestamp: 2026-11-26T16:27:03+00:00
 - Source version: 5a88b0c9e814fc4f7678883784522beddb046f935c0d498c954eb5efb7e74fcd
 - Fetched row count: 70
 
@@ -62,7 +74,7 @@ Latest revenue snapshot date: **2026-08-11**
 - Source URL: https://docs.google.com/spreadsheets/d/1pnHBrxWvZBDIQItyxhmaSUZBxF8VMYqo_fyN7JtgyA4
 - Fetch URL: https://docs.google.com/spreadsheets/d/1pnHBrxWvZBDIQItyxhmaSUZBxF8VMYqo_fyN7JtgyA4/export?format=csv
 - Sheet/tab identity: gid=default
-- Fetch timestamp: 2026-11-26T15:47:55+00:00
+- Fetch timestamp: 2026-11-26T16:27:04+00:00
 - Source version: 0b2326a202e3101a933e08d31eacf10921c99fa081d70b5cce5bcb1c40d4f819
 - Fetched row count: 10
 
@@ -70,14 +82,15 @@ Latest revenue snapshot date: **2026-08-11**
 - Source URL: https://docs.google.com/spreadsheets/d/1DToTpZtuwtVIdCPethZRe4T-y6mxGpWuivWSmR2XZt4
 - Fetch URL: https://docs.google.com/spreadsheets/d/1DToTpZtuwtVIdCPethZRe4T-y6mxGpWuivWSmR2XZt4/export?format=csv
 - Sheet/tab identity: gid=default
-- Fetch timestamp: 2026-11-26T15:47:56+00:00
+- Fetch timestamp: 2026-11-26T16:27:05+00:00
 - Source version: 0b4bd084bdfd014969914f3b86f0dec26770da559a585e7ae51fc9de5735ba01
 - Fetched row count: 25
 
 ## Traceability and unresolved items
 
 - Normalized rows retain the source URL and source version; output values are computed only from the rows fetched in this run.
-- Budget variances compare posted month-to-date transaction amounts by category with the matching budget period; revenue variance is not asserted without a matching comparison rule in the source evidence.
+- Budget variances compare posted month-to-date transaction amounts by category with the matching budget period.
+- Revenue variances compare each metric's latest available snapshot with the immediately prior available snapshot; the report shows exact signed changes and does not invent a materiality threshold.
 - Human review remains required for disputed, pending, and material variance decisions.
 
 ## Run details

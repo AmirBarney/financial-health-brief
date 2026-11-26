@@ -220,18 +220,46 @@ def main() -> int:
                 budget_checks.append((budget_row["category"], actual, budget_value, actual - budget_value, budget_row["review_rule"]))
         revenue_dates = [iso_day(row[rev_fields["date"]]) for row in rev["rows"] if iso_day(row[rev_fields["date"]]) <= report_day]
         revenue_day = max(revenue_dates) if revenue_dates else None
+        prior_revenue_day = max((day for day in revenue_dates if day < revenue_day), default=None) if revenue_day else None
         revenue_latest = [(row[rev_fields["metric"]].strip(), row[rev_fields["value"]].strip(), row[rev_fields["currency"]].strip()) for row in rev["rows"] if revenue_day and iso_day(row[rev_fields["date"]]) == revenue_day]
+        revenue_variances = []
+        if revenue_day and prior_revenue_day:
+            latest_by_metric: dict[str, list[tuple[Decimal, str]]] = {}
+            prior_by_metric: dict[str, list[tuple[Decimal, str]]] = {}
+            for row in rev["rows"]:
+                row_day = iso_day(row[rev_fields["date"]])
+                metric = row[rev_fields["metric"]].strip()
+                value = amount(row[rev_fields["value"]])
+                currency = row[rev_fields["currency"]].strip()
+                if row_day == revenue_day:
+                    latest_by_metric.setdefault(metric, []).append((value, currency))
+                elif row_day == prior_revenue_day:
+                    prior_by_metric.setdefault(metric, []).append((value, currency))
+            for metric in sorted(latest_by_metric):
+                latest_values = latest_by_metric[metric]
+                prior_values = prior_by_metric.get(metric, [])
+                if len(latest_values) != 1 or len(prior_values) != 1:
+                    clarification_requests.append(f"Revenue metric {metric!r} is not unique on both comparison dates; clarify with Finance before concluding.")
+                    continue
+                latest_value, latest_currency = latest_values[0]
+                prior_value, prior_currency = prior_values[0]
+                if latest_currency != prior_currency:
+                    clarification_requests.append(f"Revenue metric {metric!r} changes currency between comparison dates; clarify with Finance before concluding.")
+                    continue
+                revenue_variances.append((metric, prior_value, latest_value, latest_value - prior_value, latest_currency))
         lines = ["# Daily financial health brief", "", "> Draft for human review. No source system or financial action was changed.", "", f"## Exact figures — reporting date {report_day.isoformat()}", "", f"- Reporting-date posted total: **{signed(posted)}**", f"- Reporting-date pending-confirmed total: **{signed(pending)}**", f"- Reporting-date disputed-confirmed total: **{signed(disputed)}**", f"- Prior business-day posted total ({prior_day.isoformat() if prior_day else 'unavailable'}): **{signed(prior) if prior is not None else 'unavailable'}**", f"- Change between posted totals: **{signed(change) if change is not None else 'unavailable'}**", "", "## Month-to-date budget check", "", "| Category | Posted MTD | Budget | Variance | Review rule |", "|---|---:|---:|---:|---|"]
         lines += [f"| {category} | {signed(actual)} | {signed(budget_value)} | {signed(variance)} | {rule} |" for category, actual, budget_value, variance, rule in budget_checks]
         lines += ["", "## Revenue and outstanding balances", "", f"Latest revenue snapshot date: **{revenue_day.isoformat() if revenue_day else 'unavailable'}**", "", "| Metric | Value | Currency |", "|---|---:|---|"]
         lines += [f"| {metric} | {value or 'unavailable'} | {currency or 'not supplied'} |" for metric, value, currency in revenue_latest]
+        lines += ["", "### Revenue variance comparison", "", f"Comparison rule: latest available snapshot ({revenue_day.isoformat() if revenue_day else 'unavailable'}) minus the immediately prior available snapshot ({prior_revenue_day.isoformat() if prior_revenue_day else 'unavailable'}).", "", "| Metric | Prior snapshot | Latest snapshot | Change | Currency |", "|---|---:|---:|---:|---|"]
+        lines += [f"| {metric} | {signed(prior_value)} | {signed(latest_value)} | **{signed(variance)}** | {currency or 'not supplied'} |" for metric, prior_value, latest_value, variance, currency in revenue_variances] or ["| unavailable | unavailable | unavailable | unavailable | unavailable |"]
         lines += ["", "## Review items", "", "- Pending and disputed items require human review; the Operations owner approves dispute treatments, spending changes, and escalations.", "- The interview specifically calls out a pending USD 700 disputed refund; it is present in the current ledger as a confirmed disputed transaction.", "- Rows with unknown amounts remain unresolved and are excluded from numeric totals until the Operations owner confirms them.", "", "## Clarification requests", ""]
         lines += [f"- {issue}" for issue in clarification_requests] or ["- None identified."]
         lines += ["", "## Source metadata", ""]
         for role in ["transactions", "budget", "revenue"]:
             m = sources[role]["meta"]
             lines += [f"### {role}", f"- Source URL: {m['url']}", f"- Fetch URL: {m['export_url']}", f"- Sheet/tab identity: gid={m['tab']}", f"- Fetch timestamp: {m['fetched_at']}", f"- Source version: {m['version']}", f"- Fetched row count: {m['row_count']}", ""]
-        lines += ["## Traceability and unresolved items", "", "- Normalized rows retain the source URL and source version; output values are computed only from the rows fetched in this run.", "- Budget variances compare posted month-to-date transaction amounts by category with the matching budget period; revenue variance is not asserted without a matching comparison rule in the source evidence.", "- Human review remains required for disputed, pending, and material variance decisions.", "", "## Run details", "", "- Command: `python3 scripts/build_brief.py --transactions-url <url> --budget-url <url> --revenue-url <url>`", "- Runtime: Python 3 standard library only.", "- Dependencies: none beyond the Python standard library."]
+        lines += ["## Traceability and unresolved items", "", "- Normalized rows retain the source URL and source version; output values are computed only from the rows fetched in this run.", "- Budget variances compare posted month-to-date transaction amounts by category with the matching budget period.", "- Revenue variances compare each metric's latest available snapshot with the immediately prior available snapshot; the report shows exact signed changes and does not invent a materiality threshold.", "- Human review remains required for disputed, pending, and material variance decisions.", "", "## Run details", "", "- Command: `python3 scripts/build_brief.py --transactions-url <url> --budget-url <url> --revenue-url <url>`", "- Runtime: Python 3 standard library only.", "- Dependencies: none beyond the Python standard library."]
         (stage / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
         print(json.dumps({role: sources[role]["meta"] for role in sources}, indent=2))
         NORMALIZED.mkdir(parents=True, exist_ok=True); OUT.mkdir(parents=True, exist_ok=True)

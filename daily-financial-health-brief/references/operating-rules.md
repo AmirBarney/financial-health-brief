@@ -18,6 +18,13 @@ The implementation chooses a role from semantic header meanings and validates th
 - Unmapped categories, missing evidence, or conflicting evidence are clarification requests, not conclusions.
 - The Operations owner approves spending changes, dispute treatments, and escalations.
 
+## Revenue variance rule
+
+- Compare the latest available Revenue snapshot on or before the reporting date with the immediately prior available Revenue snapshot.
+- For each metric present exactly once on both dates, calculate variance as `latest value - prior value` and display the exact signed change with its currency/unit.
+- If a metric is missing, duplicated, or changes currency between the two snapshots, do not calculate it; create a Finance clarification request instead.
+- The brief reports the exact change but does not invent a materiality threshold. Finance and Operations decide whether a change is material.
+
 ## Cadence and ownership
 
 - Prepare one draft for each business day's operations meeting; the exact annual meeting count depends on the organization's schedule.

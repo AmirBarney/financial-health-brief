@@ -22,6 +22,7 @@ Exact signed daily totals.
 Prior-business-day comparison.
 Month-to-date budget variances.
 Revenue and outstanding-balance metrics.
+Revenue variance comparison from the latest available snapshot to the immediately prior available snapshot.
 Source URLs, timestamps, versions, and row counts.
 Unresolved review items.
 
@@ -33,6 +34,7 @@ Unresolved review items.
 - The Operations owner decides how to treat spending changes, disputed items, and escalations.
 - Clarify Transaction ledger issues with Operations.
 - Clarify Budget targets or Revenue snapshot issues with Finance.
+- Review the `Revenue variance comparison` table. It shows exact signed changes; no materiality threshold is inferred, so Finance and Operations decide what requires action.
 - Do not fill in blank amounts, infer missing evidence, or estimate hourly compensation. Unknown amounts remain blank and outside numeric totals.
 
 The manual baseline from the follow-up interview is approximately one hour per meeting. The workflow does not calculate a labor-cost estimate because compensation was not provided.

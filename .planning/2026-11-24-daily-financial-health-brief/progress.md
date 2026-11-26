@@ -37,3 +37,10 @@
 | Error | Resolution |
 |-------|------------|
 | `entire agent-help` returned `operation not permitted` | Logged; continued because it is advisory and does not block the requested deliverables. |
+
+### Revenue variance follow-up
+- Implemented a documented comparison rule: latest available Revenue snapshot on or before the reporting date minus the immediately prior available snapshot.
+- Added exact signed changes for each metric that is unique on both dates and uses the same currency/unit; ambiguous or missing comparisons become Finance clarification requests.
+- Updated the skill instructions, operating rules, and manager procedure to describe the rule and keep materiality as a human decision.
+- Focused validation passed with Homebrew Python 3.15.2: syntax compilation succeeded, all three live sources fetched (70 transactions, 10 budget rows, 25 revenue rows), and the report generated the expected 2026-08-10 to 2026-08-11 variances.
+- Static diagnostics passed with no errors. Generated cache/editor files were removed; changes remain local and were not pushed.

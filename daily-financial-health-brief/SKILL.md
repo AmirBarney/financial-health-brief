@@ -14,7 +14,7 @@ python3 scripts/build_brief.py \
   --revenue-url '<Revenue snapshot view-only URL>'
 ```
 
-The command fetches all three sources on every run, validates their semantic headers, stages normalized outputs, and publishes only after the complete run succeeds. It is read-only with respect to the source systems and produces a draft for human review. It does not approve spending, resolve disputes, or send money.
+The command fetches all three sources on every run, validates their semantic headers, stages normalized outputs, and publishes only after the complete run succeeds. It compares the latest available revenue snapshot with the immediately prior available snapshot and reports exact signed metric changes when both observations are unique and use the same currency. It is read-only with respect to the source systems and produces a draft for human review. It does not approve spending, resolve disputes, or send money.
 
 Run it for each business day's operations meeting. The workflow is designed to reduce a manual process that the manager estimates at about one hour per meeting; no hourly compensation or savings estimate is inferred. The report explicitly lists unknown amounts, unmapped categories, missing evidence, and conflicting evidence as clarification requests. Clarify ledger issues with Operations and budget/revenue issues with Finance before the Operations owner makes a spending, dispute, or escalation decision.
 
