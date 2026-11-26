@@ -4,7 +4,7 @@
 Build and verify an Agent Skills-compliant, read-only daily financial health brief skill and its required normalized/report deliverables from the interview requirements.
 
 ## Next Step
-Commit and push the follow-up interview improvements after final verification.
+No further implementation step remains; follow-up improvements are committed and pushed.
 
 ## Current Phase
 Phase 5
@@ -40,8 +40,8 @@ Phase 5
 ### Phase 6: Follow-up interview improvements
 - [x] Read and extract the 2026-11-26 interview feedback
 - [x] Implement clarification requests, explicit unknown amount handling, and cadence/ownership guidance
-- [ ] Commit and push follow-up changes
-- **Status:** in_progress
+- [x] Commit and push follow-up changes
+- **Status:** complete
 
 ## Decisions Made
 | Decision | Rationale |

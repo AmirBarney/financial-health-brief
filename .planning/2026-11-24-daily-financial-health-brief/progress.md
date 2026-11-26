@@ -21,6 +21,7 @@
 - Verified failed fetch cleanup removes all four required outputs, then regenerated the current report successfully.
 - Read the 2026-11-26 follow-up interview and implemented business-day cadence guidance, explicit unknown amount state, clarification requests for missing/unmapped/conflicting evidence, and owner routing.
 - Added the follow-up interview export and repository `.gitignore` for macOS metadata.
+- Committed and pushed follow-up changes as `3da85d8`.
 
 ### Test Results
 | Test | Expected | Actual | Status |
