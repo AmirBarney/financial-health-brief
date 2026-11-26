@@ -1,0 +1,50 @@
+{
+  "cli_version": "0.13.4",
+  "checkpoint_id": "01M8C8QVJPFKVX2SR6T1CC95E2",
+  "session_id": "01a20e4a-01b1-7982-bf08-fefdc0ba41e8",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-26T15:49:13.664931Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".planning/2026-11-24-daily-financial-health-brief/progress.md",
+    ".planning/2026-11-24-daily-financial-health-brief/task_plan.md"
+  ],
+  "agent": "Codex",
+  "model": "gpt-5.6-luna",
+  "turn_id": "c1b3ac967ce3",
+  "checkpoint_transcript_start": 946,
+  "transcript_lines_at_start": 946,
+  "compact_transcript_start": 152,
+  "token_usage": {
+    "input_tokens": 2157,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 546944,
+    "output_tokens": 610,
+    "api_call_count": 3
+  },
+  "session_token_usage": {
+    "input_tokens": 414469,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 9725056,
+    "output_tokens": 39377,
+    "api_call_count": 105
+  },
+  "redaction": {
+    "replacements": 434,
+    "layers": {
+      "betterleaks": 0,
+      "connection_string": 0,
+      "credential_key": 0,
+      "credential_value": 0,
+      "credentialed_uri": 0,
+      "entropy": 434,
+      "key_context": 0,
+      "provider_token": 0,
+      "shell_stdin": 0
+    }
+  },
+  "session_metrics": {
+    "turn_count": 5
+  }
+}
