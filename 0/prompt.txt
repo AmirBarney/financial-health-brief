@@ -1,0 +1,35 @@
+Don't push commits unless I state please.
+
+@/Users/mir/financial-health-brief/README.md
+
+---
+
+With all the information can you give me a list of constraints? 
+
+@/Users/mir/financial-health-brief/README.md
+
+---
+
+did we meet these?
+
+@/Users/mir/financial-health-brief/README.md
+
+---
+
+"Revenue variance comparison is not fully implemented. The report shows the latest revenue and outstanding-balance snapshot, but explicitly does not calculate revenue variance because the source does not define a comparison rule." 
+
+Is it possible to meet this criteria and fix it?
+
+@/Users/mir/financial-health-brief/README.md
+
+---
+
+Did we evaluate it & test it against the success condition?
+
+@/Users/mir/financial-health-brief/HOW TO USE.md
+
+---
+
+push commits to github 
+
+@/Users/mir/financial-health-brief/HOW TO USE.md
