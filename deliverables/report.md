@@ -41,7 +41,12 @@ Latest revenue snapshot date: **2026-08-11**
 
 - Pending and disputed items require human review; the Operations owner approves dispute treatments, spending changes, and escalations.
 - The interview specifically calls out a pending USD 700 disputed refund; it is present in the current ledger as a confirmed disputed transaction.
-- Rows with missing amounts remain unresolved and are excluded from numeric totals until the Operations owner confirms them.
+- Rows with unknown amounts remain unresolved and are excluded from numeric totals until the Operations owner confirms them.
+
+## Clarification requests
+
+- Transaction TX-1025 has an unknown amount; clarify with the Operations owner before concluding.
+- Transaction TX-1045 has an unknown amount; clarify with the Operations owner before concluding.
 
 ## Source metadata
 
@@ -49,7 +54,7 @@ Latest revenue snapshot date: **2026-08-11**
 - Source URL: https://docs.google.com/spreadsheets/d/16HhjfR9uG1oUwSFNjQvAvU9Q9gVjzxL0ufBzTJe82v8
 - Fetch URL: https://docs.google.com/spreadsheets/d/16HhjfR9uG1oUwSFNjQvAvU9Q9gVjzxL0ufBzTJe82v8/export?format=csv
 - Sheet/tab identity: gid=default
-- Fetch timestamp: 2026-11-24T17:03:42+00:00
+- Fetch timestamp: 2026-11-26T15:47:54+00:00
 - Source version: 5a88b0c9e814fc4f7678883784522beddb046f935c0d498c954eb5efb7e74fcd
 - Fetched row count: 70
 
@@ -57,7 +62,7 @@ Latest revenue snapshot date: **2026-08-11**
 - Source URL: https://docs.google.com/spreadsheets/d/1pnHBrxWvZBDIQItyxhmaSUZBxF8VMYqo_fyN7JtgyA4
 - Fetch URL: https://docs.google.com/spreadsheets/d/1pnHBrxWvZBDIQItyxhmaSUZBxF8VMYqo_fyN7JtgyA4/export?format=csv
 - Sheet/tab identity: gid=default
-- Fetch timestamp: 2026-11-24T17:03:43+00:00
+- Fetch timestamp: 2026-11-26T15:47:55+00:00
 - Source version: 0b2326a202e3101a933e08d31eacf10921c99fa081d70b5cce5bcb1c40d4f819
 - Fetched row count: 10
 
@@ -65,7 +70,7 @@ Latest revenue snapshot date: **2026-08-11**
 - Source URL: https://docs.google.com/spreadsheets/d/1DToTpZtuwtVIdCPethZRe4T-y6mxGpWuivWSmR2XZt4
 - Fetch URL: https://docs.google.com/spreadsheets/d/1DToTpZtuwtVIdCPethZRe4T-y6mxGpWuivWSmR2XZt4/export?format=csv
 - Sheet/tab identity: gid=default
-- Fetch timestamp: 2026-11-24T17:03:43+00:00
+- Fetch timestamp: 2026-11-26T15:47:56+00:00
 - Source version: 0b4bd084bdfd014969914f3b86f0dec26770da559a585e7ae51fc9de5735ba01
 - Fetched row count: 25
 

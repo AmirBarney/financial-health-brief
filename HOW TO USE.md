@@ -28,6 +28,16 @@ Unresolved review items.
 4. Use transactions.csv as the traceable machine-readable transaction output—not as a substitute for the manager’s brief.
 
 
+5. Run once for each business day’s operations meeting. Before handoff, read the `Review items` and `Clarification requests` sections in `deliverables/report.md`:
+
+- The Operations owner decides how to treat spending changes, disputed items, and escalations.
+- Clarify Transaction ledger issues with Operations.
+- Clarify Budget targets or Revenue snapshot issues with Finance.
+- Do not fill in blank amounts, infer missing evidence, or estimate hourly compensation. Unknown amounts remain blank and outside numeric totals.
+
+The manual baseline from the follow-up interview is approximately one hour per meeting. The workflow does not calculate a labor-cost estimate because compensation was not provided.
+
+
 The workflow is read-only. It does not modify the Sheets, approve spending, resolve disputes, or send money. If fetching or validation fails, the required outputs are removed so stale results cannot be mistaken for current data.
 
 The manager should pay particular attention to pending/disputed rows and the transactions with missing amounts, which remain unresolved for human review.

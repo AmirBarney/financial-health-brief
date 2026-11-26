@@ -15,6 +15,9 @@
 - Live source fetch succeeded after using approved network access. The three source row counts were 70 transactions, 10 budget rows, and 25 revenue rows.
 - The transaction ledger contains two pending rows with blank amounts; these are preserved with `amount_status=unknown` and excluded from numeric totals.
 - Current reporting date is 2026-08-11. The live report computes signed totals and includes month-to-date budget checks plus the latest revenue/outstanding-balance snapshot.
+- Follow-up interview (2026-11-26) confirms the cadence is each business day's operations meeting; manual preparation is about one hour per meeting; hourly compensation/cost is unavailable and must not be estimated.
+- Follow-up interview requires pending/disputed missing amounts to stay blank with explicit `unknown` amount state, and requires clarification before conclusions when evidence is missing/conflicting or categories are unmapped.
+- Follow-up ownership: Operations owns the transaction ledger and final spending/dispute/escalation decisions; Finance owns budget targets and revenue snapshot; source-owner clarification is required before concluding.
 
 ## Technical Decisions
 | Decision | Rationale |

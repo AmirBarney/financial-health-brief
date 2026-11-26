@@ -4,7 +4,7 @@
 Build and verify an Agent Skills-compliant, read-only daily financial health brief skill and its required normalized/report deliverables from the interview requirements.
 
 ## Next Step
-No further implementation step remains; current live outputs are published and verified.
+Commit and push the follow-up interview improvements after final verification.
 
 ## Current Phase
 Phase 5
@@ -37,6 +37,12 @@ Phase 5
 - [x] Deliver to user
 - **Status:** complete
 
+### Phase 6: Follow-up interview improvements
+- [x] Read and extract the 2026-11-26 interview feedback
+- [x] Implement clarification requests, explicit unknown amount handling, and cadence/ownership guidance
+- [ ] Commit and push follow-up changes
+- **Status:** in_progress
+
 ## Decisions Made
 | Decision | Rationale |
 |----------|-----------|
@@ -48,6 +54,7 @@ Phase 5
 | Error | Resolution |
 |-------|------------|
 | Direct Google Sheets fetch failed with DNS resolution errors | Kept the three interview URLs as runtime inputs; did not bundle or invent source data. |
+| Follow-up interview identified unknown amounts, unmapped categories, and conflicting evidence as recurring issues | Added explicit clarification requests and owner routing while preserving blank unknown amounts outside numeric totals. |
 | Python executable is an Xcode command-line-tools shim in this environment | Used editor diagnostics for static validation; documented the runtime command and dependency-free implementation. |
 | Source-specific budget header was `budget_amount` | Added semantic alias and reran against live data. |
 | Initial output root was one directory too high | Corrected skill-root calculation and reran into required workspace paths. |

@@ -19,6 +19,8 @@
 - Fetched all three live Sheets with approved network access, fixed source aliases, preserved blank pending amounts, corrected the output-root bug, and published current normalized outputs/report.
 - Added programmatic month-to-date budget checks and latest revenue/outstanding-balance metrics.
 - Verified failed fetch cleanup removes all four required outputs, then regenerated the current report successfully.
+- Read the 2026-11-26 follow-up interview and implemented business-day cadence guidance, explicit unknown amount state, clarification requests for missing/unmapped/conflicting evidence, and owner routing.
+- Added the follow-up interview export and repository `.gitignore` for macOS metadata.
 
 ### Test Results
 | Test | Expected | Actual | Status |
@@ -28,6 +30,7 @@
 | Runtime execution | Python CLI runs | `/usr/bin/python3` requires unavailable macOS developer tools | BLOCKED |
 | Virtualenv compile and live run | Validates and publishes current outputs | Python 3.9.6 compile passed; live run fetched 70/10/25 rows and published report | PASS |
 | Failure safety | Failed run leaves no stale required outputs | All four required outputs were removed after intentional connection refusal | PASS |
+| Follow-up live run | New controls appear in current draft | Two unknown transaction amounts are blank and routed to Operations in `Clarification requests` | PASS |
 
 ### Errors
 | Error | Resolution |

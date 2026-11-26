@@ -121,6 +121,21 @@ def csv_write(path: Path, headers: list[str], rows: list[dict[str, str]]) -> Non
         writer.writeheader()
         writer.writerows(rows)
 
+def conflicting_keys(rows: list[dict[str, str]], keys: list[str], role: str, owner: str) -> list[str]:
+    """Return clarification requests for repeated business keys with different evidence."""
+    seen: dict[tuple[str, ...], str] = {}
+    issues = []
+    for row_number, row in enumerate(rows, 2):
+        business_key = tuple(row.get(key, "").strip() for key in keys)
+        if not all(business_key):
+            continue
+        signature = repr(sorted(row.items()))
+        previous = seen.get(business_key)
+        if previous is not None and previous != signature:
+            issues.append(f"{role} has conflicting evidence for {business_key}; clarify with {owner} before concluding.")
+        seen[business_key] = signature
+    return issues
+
 def clean_outputs() -> None:
     for path in [NORMALIZED / "transactions.csv", NORMALIZED / "budget.csv", NORMALIZED / "revenue.csv", OUT / "report.md"]:
         path.unlink(missing_ok=True)
@@ -143,19 +158,33 @@ def main() -> int:
         b_fields = require_role(b["rows"], "budget", {"date", "category", "amount", "currency", "owner", "review_rule"})
         rev = sources["revenue"]
         rev_fields = require_role(rev["rows"], "revenue", {"date", "source", "metric", "value", "currency"})
+        clarification_requests = []
+        clarification_requests += conflicting_keys(tx["rows"], [tx_fields.get("transaction_id", "")], "Transaction ledger", "the Operations owner") if tx_fields.get("transaction_id") else []
+        clarification_requests += conflicting_keys(b["rows"], [b_fields["date"], b_fields["category"]], "Budget targets", "Finance")
+        clarification_requests += conflicting_keys(rev["rows"], [rev_fields["date"], rev_fields["metric"]], "Revenue snapshot", "Finance")
 
         stage = Path(tempfile.mkdtemp(prefix="daily-financial-health-brief-", dir=ROOT.parent))
         (stage / "normalized").mkdir()
         tx_out, budget_out, rev_out = [], [], []
         for index, row in enumerate(tx["rows"], 1):
             d = iso_day(row[tx_fields["date"]]); raw_amount = row[tx_fields["amount"]]; amount_value = optional_amount(raw_amount)
-            tx_out.append({"transaction_id": row.get(tx_fields.get("transaction_id", ""), str(index)), "date": d.isoformat(), "account": row.get(tx_fields.get("account", ""), ""), "category": row.get(tx_fields.get("category", ""), ""), "description": row.get(tx_fields.get("description", ""), ""), "amount": "" if amount_value is None else f"{amount_value:.2f}", "currency": row[tx_fields["currency"]].strip(), "status": row[tx_fields["status"]].strip(), "source": tx["meta"]["url"], "source_version": tx["meta"]["version"], "amount_status": row.get(tx_fields.get("confirmation", ""), "").strip() or ("missing" if amount_value is None else "parsed")})
+            raw_status = row[tx_fields["status"]].strip().lower()
+            amount_state = row.get(tx_fields.get("confirmation", ""), "").strip() or ("unknown" if amount_value is None else "parsed")
+            if amount_value is None and raw_status in {"pending", "disputed", "pending-confirmed", "pending confirmed", "pending_confirmed", "disputed-confirmed", "disputed confirmed", "disputed_confirmed"}:
+                amount_state = "unknown"
+                clarification_requests.append(f"Transaction {row.get(tx_fields.get('transaction_id', ''), str(index))} has an unknown amount; clarify with the Operations owner before concluding.")
+            if not row.get(tx_fields.get("category", ""), "").strip():
+                clarification_requests.append(f"Transaction {row.get(tx_fields.get('transaction_id', ''), str(index))} has no category; clarify with the Operations owner before concluding.")
+            tx_out.append({"transaction_id": row.get(tx_fields.get("transaction_id", ""), str(index)), "date": d.isoformat(), "account": row.get(tx_fields.get("account", ""), ""), "category": row.get(tx_fields.get("category", ""), ""), "description": row.get(tx_fields.get("description", ""), ""), "amount": "" if amount_value is None else f"{amount_value:.2f}", "currency": row[tx_fields["currency"]].strip(), "status": row[tx_fields["status"]].strip(), "source": tx["meta"]["url"], "source_version": tx["meta"]["version"], "amount_status": amount_state})
         for row in b["rows"]:
             budget_value = amount(row[b_fields["amount"]])
             budget_out.append({"period": iso_day(row[b_fields["date"]]).isoformat(), "category": row[b_fields["category"]].strip(), "budget_amount": f"{budget_value:.2f}", "currency": row[b_fields["currency"]].strip(), "owner": row[b_fields["owner"]].strip(), "review_rule": row[b_fields["review_rule"]].strip(), "source": b["meta"]["url"], "source_version": b["meta"]["version"]})
         for row in rev["rows"]:
             revenue_value = amount(row[rev_fields["value"]])
             rev_out.append({"date": iso_day(row[rev_fields["date"]]).isoformat(), "source": row[rev_fields["source"]].strip(), "metric": row[rev_fields["metric"]].strip(), "value": f"{revenue_value:.2f}", "currency": row[rev_fields["currency"]].strip(), "source_version": rev["meta"]["version"]})
+        budget_categories = {row["category"] for row in budget_out}
+        for category in sorted({row["category"] for row in tx_out if row["category"]} - budget_categories):
+            clarification_requests.append(f"Transaction category {category!r} is not mapped to Budget targets; clarify with the Operations owner and Finance before concluding.")
         csv_write(stage / "normalized/transactions.csv", ["transaction_id", "date", "account", "category", "description", "amount", "currency", "status", "source", "source_version", "amount_status"], tx_out)
         csv_write(stage / "normalized/budget.csv", ["period", "category", "budget_amount", "currency", "owner", "review_rule", "source", "source_version"], budget_out)
         csv_write(stage / "normalized/revenue.csv", ["date", "source", "metric", "value", "currency", "source_version"], rev_out)
@@ -196,7 +225,9 @@ def main() -> int:
         lines += [f"| {category} | {signed(actual)} | {signed(budget_value)} | {signed(variance)} | {rule} |" for category, actual, budget_value, variance, rule in budget_checks]
         lines += ["", "## Revenue and outstanding balances", "", f"Latest revenue snapshot date: **{revenue_day.isoformat() if revenue_day else 'unavailable'}**", "", "| Metric | Value | Currency |", "|---|---:|---|"]
         lines += [f"| {metric} | {value or 'unavailable'} | {currency or 'not supplied'} |" for metric, value, currency in revenue_latest]
-        lines += ["", "## Review items", "", "- Pending and disputed items require human review; the Operations owner approves dispute treatments, spending changes, and escalations.", "- The interview specifically calls out a pending USD 700 disputed refund; it is present in the current ledger as a confirmed disputed transaction.", "- Rows with missing amounts remain unresolved and are excluded from numeric totals until the Operations owner confirms them.", "", "## Source metadata", ""]
+        lines += ["", "## Review items", "", "- Pending and disputed items require human review; the Operations owner approves dispute treatments, spending changes, and escalations.", "- The interview specifically calls out a pending USD 700 disputed refund; it is present in the current ledger as a confirmed disputed transaction.", "- Rows with unknown amounts remain unresolved and are excluded from numeric totals until the Operations owner confirms them.", "", "## Clarification requests", ""]
+        lines += [f"- {issue}" for issue in clarification_requests] or ["- None identified."]
+        lines += ["", "## Source metadata", ""]
         for role in ["transactions", "budget", "revenue"]:
             m = sources[role]["meta"]
             lines += [f"### {role}", f"- Source URL: {m['url']}", f"- Fetch URL: {m['export_url']}", f"- Sheet/tab identity: gid={m['tab']}", f"- Fetch timestamp: {m['fetched_at']}", f"- Source version: {m['version']}", f"- Fetched row count: {m['row_count']}", ""]
